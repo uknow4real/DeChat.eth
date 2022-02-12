@@ -1,1 +1,1 @@
-# DeChat
+# DeChat.eth
