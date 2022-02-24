@@ -60,7 +60,7 @@ export default class Chat extends Component {
   
   render() {
     const { formState, messages } = this.state;
-    async function send_message() {
+    async function send_message(message, sender, recipient, timestamp) {
       let message = formState.message;
       let sender = formState.name;
       let recipient = 'Alice';
