@@ -20,7 +20,7 @@ function reducer(state, message) {
 
 export default class Chat extends Component {
   componentDidMount() {
-     
+     //this.get_messages('Alice', 'Bob');
   }
 
   constructor(props) {
@@ -39,28 +39,34 @@ export default class Chat extends Component {
   }
 
   async get_messages(sender, recipient) {
-    
-  }
-
-  //send_message('Hello', '0x1234567890123456789012345678901234567890', '0x1234567890123456789012345678901234567890', Date.now());
-    
-
-  /*
-  await db.get({
+    await db.get({
       TableName: message_table,
       Key: {
-        'id': id
+        sender: sender
       }
     }).promise().then(response => {
       console.log(response);
     }, error => {
       console.error(error);
     })
+  }
+  //send_message('Hello', '0x1234567890123456789012345678901234567890', '0x1234567890123456789012345678901234567890', Date.now());
+  
+  setMessage(message) {
+    this.setState({
+      messages: [
+        ...this.messages, message
+      ]
+    });
+  }
+
+  /*
+  
   */
   
   render() {
     const { formState, messages } = this.state;
-    async function send_message(message, sender, recipient, timestamp) {
+    async function send_message() {
       let message = formState.message;
       let sender = formState.name;
       let recipient = 'Alice';
@@ -82,6 +88,7 @@ export default class Chat extends Component {
       }, error => {
           console.error('Oh no.', error);
       })
+      this.setMessage(message_to_send);
     }
     return (
       <div style={{ padding: 30, textAlign: 'center'}}>
@@ -104,8 +111,8 @@ export default class Chat extends Component {
           messages.map(message => (
             <div key={message.createdAt}>
               <h2>{message.message}</h2>
-              <h3>From: {message.name}</h3>
-              <p>Date: {message.createdAt}</p>
+              <h3>From: {message.sender}</h3>
+              <p>Date: {message.timestamp}</p>
             </div>
           ))
         }
