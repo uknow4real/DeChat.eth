@@ -44,14 +44,21 @@ export default class Login extends Component {
         const { formState, accounts, connected} = this.state;
         const { contract } = this.props;
         async function joinRoom() {
-            // 0x25EA4343d773Ef9442Fd62A98f25980E56FC9944
-            window.location.replace(`/chat/${formState.room}`);
+            if (web3.utils.isAddress(formState.room)) {
+                let roomID = await contract.methods.checkRoom(web3.utils.toHex(formState.room)).call({ from: accounts[0]});
+                if (roomID) {
+                    localStorage.setItem('room', formState.room);
+                    window.location.replace(`/chat`);
+                    return roomID;
+                }
+            }
+            alert('Room does not exist');
         }
         async function createRoom() {
             await contract.methods.createRoom().send({ from: accounts[0] });
-            let roomID = await contract.methods.getRoom(accounts[0]).call({ from: accounts[0]});
-            console.log(roomID);
-            alert('Your Room ID: '+roomID+'\n\nPlease keep it safe and share this ID with your friends to join the room!');
+            let roomID = await contract.methods.getOwnRooms(accounts[0]).call({ from: accounts[0]});
+            console.log(roomID[roomID.length-1]);
+            alert('Your Room ID: '+roomID[roomID.length-1]+'\n\nPlease keep it safe and share this ID with your friends to join the room!');
         }
         if (connected == false) {
             return (

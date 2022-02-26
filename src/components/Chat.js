@@ -10,11 +10,13 @@ aws.config.update({
 });
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = 'dechat.eth';
+// 0x4a9cD320e8a1EEa8fD39748a10833555CB9bafD9
 
 export default class Chat extends Component {
   componentDidMount() {
-    this.connect();
-    this.get_messages();
+    if (this.initRoom()) {
+      this.get_messages();
+    }
   }
 
   componentWillUnmount() {
@@ -29,65 +31,62 @@ export default class Chat extends Component {
         name: '',
         message: ''
       },
-      messages: []
+      messages: [],
+      room: null,
+      accounts: null,
+      connected: null
     };
   }
 
-  async connect() {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log(accounts);
-      } catch (error) {
-        console.error(error);
+  async initRoom() {
+    let contract = this.props.contract;
+    let accounts = await this.getAccounts();
+    let room = localStorage.getItem('room');
+    if (web3.utils.isAddress(room)) {
+      let roomID = await contract.methods.checkRoom(web3.utils.toHex(room)).call({ from: accounts[0]});
+      if (roomID) {
+        this.state.room = room;
+        return roomID;
       }
     }
   }
 
-  async get_message(sender, recipient) {
-    await db.get({
-      TableName: message_table,
-      Key: {
-        sender: sender
-      }
-    }).promise().then(response => {
-      console.log(response);
-    }, error => {
-      console.error(error);
-    })
-  }
+  async getAccounts() {
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (accounts.length != 0) {
+        this.setState({
+            accounts: accounts,
+            connected: true
+        });
+        console.log('connected!')
+    }
+    return accounts;
+}
 
   async get_messages() {
-    const params = {
-      TableName: message_table
-    }
-    const allMessages = await this.scanDynamoRecords(params, []);
-    this.setState({
-      messages: allMessages
-    });
-  }
-
-  async scanDynamoRecords(scanParams, itemArray) {
     try {
-      const dynamoData = await db.scan(scanParams).promise();
-      itemArray = itemArray.concat(dynamoData.Items);
-      if (dynamoData.LastEvaluatedKey) {
-        scanParams.ExclusiveStartKey = dynamoData.LastEvaluatedKey;
-        return await scanDynamoRecords(scanParams, itemArray);
-      }
-      return itemArray;
-    } catch(error) {
-      throw new Error(error);
+      const params = {
+        TableName : message_table,
+        FilterExpression: "room = :room",
+        ExpressionAttributeValues: {
+          ':room': localStorage.getItem('room')
+        },
+      };
+      let allMessages = await db.scan(params).promise();
+      this.setState({
+        messages: allMessages.Items
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
   
   render() {
-    const { formState, messages } = this.state;
-    console.log(this.props.match.params.room);
+    const { formState, messages, accounts, connected } = this.state;
     async function send_message() {
       let message = formState.message;
-      let sender = formState.name;
-      let room = this.props.match.params;
+      let sender = accounts[0];
+      let room = localStorage.getItem('room');
       let timestamp = Date.now();
       const message_to_send = {
           id : await sha512(message+sender+room+timestamp),
@@ -109,14 +108,17 @@ export default class Chat extends Component {
     }
     return (
       <div style={{ padding: 30, textAlign: 'center'}}>
-        <img src='../Dechat-eth.png' style={{ width: '20rem'}}></img>
+        <img src='./Dechat-eth.png' style={{ width: '20rem'}}></img>
         <br></br>
-        <input
-          onChange={e => this.setState({ formState: { ...formState, name: e.target.value } })}
-          placeholder="Name"
-          name="name"
-          value={formState.name}
-        />
+        <h4>User Settings</h4>  
+          <input
+            onChange={e => this.setState({ formState: { ...formState, name: e.target.value } })}
+            placeholder="Set Username"
+            name="name"
+            value={formState.name}
+          />
+        <br></br>
+        <h4>Messaging</h4>
         <input
           onChange={e => this.setState({ formState: { ...formState, message: e.target.value } })}
           placeholder="Message"
