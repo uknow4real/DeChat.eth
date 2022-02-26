@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer, Component } from 'react'
+import React, { Component } from 'react'
 import { sha512 } from 'crypto-hash';
 const aws_access = require('../secrets.json');
 const aws = require('aws-sdk');
@@ -11,16 +11,15 @@ aws.config.update({
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = 'dechat.eth';
 
-// Create a reducer that will update the messages array
-function reducer(state, message) {
-  return {
-    messages: [message, ...state.messages]
-  }
-}
-
 export default class Chat extends Component {
   componentDidMount() {
-     //this.get_messages('Alice', 'Bob');
+    this.connect();
+    this.get_messages();
+  }
+
+  componentWillUnmount() {
+    this.state.formState = null;
+    this.state.messages = null;
   }
 
   constructor(props) {
@@ -34,11 +33,18 @@ export default class Chat extends Component {
     };
   }
 
-  async get_message() {
-
+  async connect() {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        console.log(accounts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
-  async get_messages(sender, recipient) {
+  async get_message(sender, recipient) {
     await db.get({
       TableName: message_table,
       Key: {
@@ -50,49 +56,60 @@ export default class Chat extends Component {
       console.error(error);
     })
   }
-  //send_message('Hello', '0x1234567890123456789012345678901234567890', '0x1234567890123456789012345678901234567890', Date.now());
-  
-  setMessage(message) {
+
+  async get_messages() {
+    const params = {
+      TableName: message_table
+    }
+    const allMessages = await this.scanDynamoRecords(params, []);
     this.setState({
-      messages: [
-        ...this.messages, message
-      ]
+      messages: allMessages
     });
   }
 
-  /*
-  
-  */
+  async scanDynamoRecords(scanParams, itemArray) {
+    try {
+      const dynamoData = await db.scan(scanParams).promise();
+      itemArray = itemArray.concat(dynamoData.Items);
+      if (dynamoData.LastEvaluatedKey) {
+        scanParams.ExclusiveStartKey = dynamoData.LastEvaluatedKey;
+        return await scanDynamoRecords(scanParams, itemArray);
+      }
+      return itemArray;
+    } catch(error) {
+      throw new Error(error);
+    }
+  }
   
   render() {
     const { formState, messages } = this.state;
+    console.log(this.props.match.params.room);
     async function send_message() {
       let message = formState.message;
       let sender = formState.name;
-      let recipient = 'Alice';
+      let room = this.props.match.params;
       let timestamp = Date.now();
       const message_to_send = {
-          id : await sha512(message+sender+recipient+timestamp),
+          id : await sha512(message+sender+room+timestamp),
           message : message,
           sender : sender,
-          recipient : recipient,
+          room : room,
           timestamp : timestamp
       }
-      console.log(message_to_send);
       const params = {
           TableName: message_table,
           Item: message_to_send
       }
       await db.put(params).promise().then(() => {
           console.log('message sent');
+          window.location.reload();
       }, error => {
           console.error('Oh no.', error);
       })
-      this.setMessage(message_to_send);
     }
     return (
       <div style={{ padding: 30, textAlign: 'center'}}>
-        <img src='Dechat-eth.png' style={{ width: '20rem'}}></img>
+        <img src='../Dechat-eth.png' style={{ width: '20rem'}}></img>
         <br></br>
         <input
           onChange={e => this.setState({ formState: { ...formState, name: e.target.value } })}
@@ -109,7 +126,7 @@ export default class Chat extends Component {
         <button onClick={send_message}>Send Message</button>
         {
           messages.map(message => (
-            <div key={message.createdAt}>
+            <div key={message.id}>
               <h2>{message.message}</h2>
               <h3>From: {message.sender}</h3>
               <p>Date: {message.timestamp}</p>
