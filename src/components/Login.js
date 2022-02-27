@@ -13,15 +13,16 @@ export default class Login extends Component {
                 room: '',
             },
             accounts: null,
-            connected: null
+            connected: false
         };
     }
 
     async connect() {
-        if (window.ethereum) {
+        if (window.ethereum && ethereum._state.isUnlocked) {
           try {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             console.log('accounts registered...')
+            window.location.reload();
           } catch (error) {
             console.error(error);
           }
@@ -29,13 +30,14 @@ export default class Login extends Component {
     }
 
     async getAccounts() {
+        ethereum.on('accountsChanged', () => {this.connect()});
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         if (accounts.length != 0) {
             this.setState({
                 accounts: accounts,
                 connected: true
             });
-            console.log('connected!')
+            console.log('connected...')
         }
     }
     
@@ -58,33 +60,49 @@ export default class Login extends Component {
             await contract.methods.createRoom().send({ from: accounts[0] });
             let roomID = await contract.methods.getOwnRooms(accounts[0]).call({ from: accounts[0]});
             console.log(roomID[roomID.length-1]);
+            //document.getElementById('rooms').append(<p>{web3.utils.hexToAscii(roomID[roomID.length-1])}</p>);
             alert('Your Room ID: '+roomID[roomID.length-1]+'\n\nPlease keep it safe and share this ID with your friends to join the room!');
         }
-        if (connected == false) {
+        if (!ethereum._state.isUnlocked) {
             return (
-                <div style={{ padding: 30, textAlign: 'center'}}>
-                    <h1>Login</h1>
-                    <button onClick={this.connect.bind(this)}>CONNECT</button>
+                <div>
+                    <h1 style={{ padding: 30, textAlign: 'center'}}>Please login on Metamask!</h1>
+                    <h3 style={{ padding: 30, textAlign: 'center'}}>Or install it to proceed :) </h3>
                 </div>
-            )
+            );
+        } else {
+            if (connected == false) {
+                return (
+                    <div style={{ padding: 30, textAlign: 'center'}}>
+                        <img src='Dechat-eth.png' style={{ width: '20rem'}}></img>
+                        <h1></h1>
+                        <button onClick={this.connect.bind(this)}>CONNECT</button>
+                    </div>
+                )
+            }
+            if (connected == true) {
+                return (
+                <div style={{ padding: 30, textAlign: 'center'}}>
+                    <img src='Dechat-eth.png' style={{ width: '20rem'}}></img>
+                    <br></br>
+                    <h4>User Address: {accounts[0]}</h4>
+                    <button onClick={createRoom}>Create Room</button>
+                    <div id='rooms'></div>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <input
+                    onChange={e => this.setState({ formState: { ...formState, room: e.target.value } })}
+                    placeholder="Room ID"
+                    name="room"
+                    value={formState.room}
+                    />
+                    <button onClick={joinRoom}>Join</button>
+                    
+                </div>
+                )
+            }
         }
-        if (connected == true) {
-            return (
-            <div style={{ padding: 30, textAlign: 'center'}}>
-                <img src='Dechat-eth.png' style={{ width: '20rem'}}></img>
-                <br></br>
-                <input
-                onChange={e => this.setState({ formState: { ...formState, room: e.target.value } })}
-                placeholder="Room ID"
-                name="room"
-                value={formState.room}
-                />
-                <button onClick={joinRoom}>Join</button>
-                <br></br>
-                <button onClick={createRoom}>Create Room</button>
-            </div>
-            )
-        }  
-        return null; 
+        return null;
     }
 }

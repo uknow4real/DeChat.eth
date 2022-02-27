@@ -16,12 +16,14 @@ export default class Chat extends Component {
   componentDidMount() {
     if (this.initRoom()) {
       this.get_messages();
+      ethereum.on('accountsChanged', () => {window.location.reload()});
     }
   }
 
   componentWillUnmount() {
     this.state.formState = null;
     this.state.messages = null;
+    ethereum.disconnect
   }
 
   constructor(props) {
@@ -32,6 +34,7 @@ export default class Chat extends Component {
         message: ''
       },
       messages: [],
+      username: null,
       room: null,
       accounts: null,
       connected: null
@@ -49,6 +52,7 @@ export default class Chat extends Component {
         return roomID;
       }
     }
+    
   }
 
   async getAccounts() {
@@ -59,9 +63,19 @@ export default class Chat extends Component {
             connected: true
         });
         console.log('connected!')
+        this.get_username(accounts[0]);
     }
     return accounts;
-}
+  }
+
+  async get_username(account) {
+    const username = await this.props.contract.methods.getUsername(account).call({ from: account });
+    if (username != '') {
+      this.setState({
+        username: username,
+      });
+    }
+  }
 
   async get_messages() {
     try {
@@ -80,9 +94,13 @@ export default class Chat extends Component {
       console.error(error);
     }
   }
-  
+
   render() {
-    const { formState, messages, accounts, connected } = this.state;
+    const { formState, messages, accounts, connected, username } = this.state;
+    const { contract } = this.props;
+    async function set_username() {
+      await contract.methods.createUser(formState.name).send({ from: accounts[0] });
+    }
     async function send_message() {
       let message = formState.message;
       let sender = accounts[0];
@@ -92,6 +110,7 @@ export default class Chat extends Component {
           id : await sha512(message+sender+room+timestamp),
           message : message,
           sender : sender,
+          username : username,
           room : room,
           timestamp : timestamp
       }
@@ -108,17 +127,22 @@ export default class Chat extends Component {
     }
     return (
       <div style={{ padding: 30, textAlign: 'center'}}>
-        <img src='./Dechat-eth.png' style={{ width: '20rem'}}></img>
+        <a href='/'><img src='./Dechat-eth.png' style={{ width: '20rem'}}></img></a>
+        <h2>User Settings</h2>
+        <h4>User Address: {accounts}</h4>
+        {username!=null ? <h4>Username: {username}</h4> : ''}
+        <input
+          onChange={e => this.setState({ formState: { ...formState, name: e.target.value } })}
+          placeholder="Username"
+          name="name"
+          value={formState.name}
+        />
+        <button onClick={set_username}>Set Username</button>
         <br></br>
-        <h4>User Settings</h4>  
-          <input
-            onChange={e => this.setState({ formState: { ...formState, name: e.target.value } })}
-            placeholder="Set Username"
-            name="name"
-            value={formState.name}
-          />
         <br></br>
-        <h4>Messaging</h4>
+        <hr></hr>
+        <h2>Room</h2>
+        <h4>{localStorage.getItem('room')}</h4>
         <input
           onChange={e => this.setState({ formState: { ...formState, message: e.target.value } })}
           placeholder="Message"
@@ -130,8 +154,8 @@ export default class Chat extends Component {
           messages.map(message => (
             <div key={message.id}>
               <h2>{message.message}</h2>
-              <h3>From: {message.sender}</h3>
-              <p>Date: {message.timestamp}</p>
+              <h3>From: {message.username!=null ? message.username : message.sender}</h3>
+              <p>Date: {new Date(message.timestamp).toLocaleDateString()} {new Date(message.timestamp).toLocaleTimeString()}</p>
             </div>
           ))
         }
