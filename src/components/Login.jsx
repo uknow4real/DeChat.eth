@@ -87,7 +87,6 @@ export default class Login extends Component {
       if (connected == false) {
         return (
           <div style={{ padding: 30, textAlign: "center" }}>
-            <img src="Dechat-eth.png" style={{ width: "20rem" }}></img>
             <h1></h1>
             <button onClick={this.connect.bind(this)}>CONNECT</button>
           </div>
@@ -96,14 +95,11 @@ export default class Login extends Component {
       if (connected == true) {
         return (
           <div style={{ padding: 30, textAlign: "center" }}>
-            <img src="Dechat-eth.png" style={{ width: "20rem" }}></img>
             <br></br>
             <h4>User Address: {accounts[0]}</h4>
             <button onClick={createRoom}>Create Room</button>
             <div id="rooms"></div>
-            <br></br>
-            <br></br>
-            <br></br>
+            <hr></hr>
             <input
               onChange={(e) =>
                 this.setState({
