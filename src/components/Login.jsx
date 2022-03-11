@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Chat from "./Chat";
-
 export default class Login extends Component {
   componentDidMount() {
     this.getAccounts();
@@ -88,7 +86,12 @@ export default class Login extends Component {
         return (
           <div style={{ padding: 30, textAlign: "center" }}>
             <h1></h1>
-            <button onClick={this.connect.bind(this)}>CONNECT</button>
+            <button
+              className="btn btn-primary"
+              onClick={this.connect.bind(this)}
+            >
+              CONNECT
+            </button>
           </div>
         );
       }
@@ -101,20 +104,22 @@ export default class Login extends Component {
             </button>
             <div id="rooms"></div>
             <hr></hr>
-            <input
-              onChange={(e) =>
-                this.setState({
-                  formState: { ...formState, room: e.target.value },
-                })
-              }
-              placeholder="Room ID"
-              className="form-control"
-              name="room"
-              value={formState.room}
-            />
-            <button className="btn btn-primary" onClick={joinRoom}>
-              Join
-            </button>
+            <div className="input-group">
+              <input
+                onChange={(e) =>
+                  this.setState({
+                    formState: { ...formState, room: e.target.value },
+                  })
+                }
+                placeholder="Room ID"
+                className="form-control"
+                name="room"
+                value={formState.room}
+              />
+              <button className="btn btn-primary" onClick={joinRoom}>
+                Join
+              </button>
+            </div>
           </div>
         );
       }
