@@ -10,10 +10,15 @@ function ChatMessage(props) {
 
   return (
     <div className={`message ${messageClass}`}>
-      <figure className={`figure figure-${messageClass}`}>
-        <img className="avatar" src={avatar} alt="avatar" />
-        <figcaption className="figure-caption">{message.username}</figcaption>
-      </figure>
+      <a
+        href={`https://kovan.etherscan.io/address/${message.sender}`}
+        target="_blank"
+      >
+        <figure className={`figure figure-${messageClass}`}>
+          <img className="avatar" src={avatar} alt="avatar" />
+          <figcaption className="figure-caption">{message.username}</figcaption>
+        </figure>
+      </a>
       <div className={`message-text-${messageClass}`}>
         <p>{message.message}</p>
         <time className={`time-${messageClass}`}>{ts}</time>
