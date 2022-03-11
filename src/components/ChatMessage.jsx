@@ -11,7 +11,7 @@ function ChatMessage(props) {
   return (
     <div className={`message ${messageClass}`}>
       <figure className={`figure figure-${messageClass}`}>
-        <img className={`avatar`} src={avatar} alt="avatar" />
+        <img className="avatar" src={avatar} alt="avatar" />
         <figcaption class="figure-caption">{message.username}</figcaption>
       </figure>
       <div className={`message-text-${messageClass}`}>
