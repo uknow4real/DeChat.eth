@@ -58,3 +58,59 @@ body {
   border: 1px solid #ccc;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
+
+#container {
+  width: 80%;
+  margin-left: 10%;
+}
+
+.message {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.message-text-sent {
+  text-align: right;
+  margin-right: 3%;
+}
+
+.message-text-received {
+  text-align: left;
+  margin-left: 3%;
+}
+.message::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.received {
+  background-color: #ddd;
+  border-color: #ccc;
+}
+
+.figure-received {
+  float: left;
+  margin-right: 20px;
+}
+
+.time-received {
+  float: right;
+}
+
+.sent {
+  border-color: #ccc;
+  background-color: #f5f6f7;
+}
+
+.figure-sent {
+  float: right;
+  margin-left: 20px;
+}
+
+.time-sent {
+  float: left;
+}

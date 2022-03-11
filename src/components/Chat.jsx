@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { sha512 } from "crypto-hash";
+import ChatMessage from "./ChatMessage";
+
 const aws_access = require("../secrets.json");
 const aws = require("aws-sdk");
 aws.config.update({
@@ -165,21 +167,17 @@ export default class Chat extends Component {
           </button>
         </div>
         <hr />
-        <h2>Room</h2>
-        <h4>{localStorage.getItem("room")}</h4>
-        {messages.map((message) => (
-          <div key={message.id}>
-            <h2>{message.message}</h2>
-            <h3>
-              From:{" "}
-              {message.username != null ? message.username : message.sender}
-            </h3>
-            <p>
-              Date: {new Date(message.timestamp).toLocaleDateString()}{" "}
-              {new Date(message.timestamp).toLocaleTimeString()}
-            </p>
-          </div>
-        ))}
+        <div className="container card">
+          <h2>Room</h2>
+          <h4>{localStorage.getItem("room")}</h4>
+          {messages.map((message) => (
+            <ChatMessage
+              key={message.id}
+              message={message}
+              username={username}
+            />
+          ))}
+        </div>
         <div className="input-group fixed-bottom mb-3">
           <input
             onChange={(e) =>
