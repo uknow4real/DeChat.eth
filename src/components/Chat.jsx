@@ -140,37 +140,33 @@ export default class Chat extends Component {
     }
     return (
       <div style={{ padding: 30, textAlign: "center" }}>
-        <a href="/">
-          <img src="./Dechat-eth.png" style={{ width: "20rem" }}></img>
-        </a>
         <h2>User Settings</h2>
+        <img
+          src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
+          className="avatar"
+          alt="avatar"
+        />
         <h4>User Address: {accounts}</h4>
         {username != null ? <h4>Username: {username}</h4> : ""}
-        <input
-          onChange={(e) =>
-            this.setState({ formState: { ...formState, name: e.target.value } })
-          }
-          placeholder="Username"
-          name="name"
-          value={formState.name}
-        />
-        <button onClick={set_username}>Set Username</button>
-        <br></br>
-        <br></br>
-        <hr></hr>
+        <div className="input-group">
+          <input
+            onChange={(e) =>
+              this.setState({
+                formState: { ...formState, name: e.target.value },
+              })
+            }
+            placeholder="Username"
+            className="form-control"
+            name="name"
+            value={formState.name}
+          />
+          <button className="btn btn-primary" onClick={set_username}>
+            Set Username
+          </button>
+        </div>
+        <hr />
         <h2>Room</h2>
         <h4>{localStorage.getItem("room")}</h4>
-        <input
-          onChange={(e) =>
-            this.setState({
-              formState: { ...formState, message: e.target.value },
-            })
-          }
-          placeholder="Message"
-          name="message"
-          value={formState.message}
-        />
-        <button onClick={send_message}>Send Message</button>
         {messages.map((message) => (
           <div key={message.id}>
             <h2>{message.message}</h2>
@@ -184,6 +180,22 @@ export default class Chat extends Component {
             </p>
           </div>
         ))}
+        <div className="input-group fixed-bottom mb-3">
+          <input
+            onChange={(e) =>
+              this.setState({
+                formState: { ...formState, message: e.target.value },
+              })
+            }
+            placeholder="Type a message..."
+            className="form-control"
+            name="message"
+            value={formState.message}
+          />
+          <button className="btn btn-primary" onClick={send_message}>
+            Send
+          </button>{" "}
+        </div>
       </div>
     );
   }

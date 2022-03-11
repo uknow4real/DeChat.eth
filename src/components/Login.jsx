@@ -95,9 +95,10 @@ export default class Login extends Component {
       if (connected == true) {
         return (
           <div style={{ padding: 30, textAlign: "center" }}>
-            <br></br>
             <h4>User Address: {accounts[0]}</h4>
-            <button onClick={createRoom}>Create Room</button>
+            <button className="btn btn-primary" onClick={createRoom}>
+              Create Room
+            </button>
             <div id="rooms"></div>
             <hr></hr>
             <input
@@ -107,10 +108,13 @@ export default class Login extends Component {
                 })
               }
               placeholder="Room ID"
+              className="form-control"
               name="room"
               value={formState.room}
             />
-            <button onClick={joinRoom}>Join</button>
+            <button className="btn btn-primary" onClick={joinRoom}>
+              Join
+            </button>
           </div>
         );
       }

@@ -3,7 +3,14 @@ import React from "react";
 function Header() {
   return (
     <div className="navbar navbar-expand-lg navbar-light bg-light">
-      <img src={`logo.png`} id="logo" className="img-fluid" alt="DeChat.eth" />
+      <a href="/">
+        <img
+          src={`logo.png`}
+          id="logo"
+          className="img-fluid"
+          alt="DeChat.eth"
+        />
+      </a>
       <ul className="navbar-nav ms-auto">
         <span className="text-muted">
           by&nbsp;
