@@ -95,7 +95,7 @@ export default class Chat extends Component {
       };
       let allMessages = await db.scan(params).promise();
       this.setState({
-        messages: allMessages.Items,
+        messages: allMessages.Items.sort((a, b) => a.timestamp - b.timestamp),
       });
     } catch (error) {
       console.error(error);
@@ -178,7 +178,7 @@ export default class Chat extends Component {
             />
           ))}
         </div>
-        <div className="input-group fixed-bottom mb-3">
+        <div className="input-group fixed-bottom w-auto m-lg-3">
           <input
             onChange={(e) =>
               this.setState({
