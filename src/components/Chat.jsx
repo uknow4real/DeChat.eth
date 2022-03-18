@@ -7,8 +7,8 @@ const aws = require("aws-sdk");
 aws.config.update({
   region: "us-east-2",
   endpoint: "https://dynamodb.us-east-2.amazonaws.com",
-  accessKeyId: process.env.ACCESS_KEY,
-  secretAccessKey: process.env.SECRET_KEY,
+  accessKeyId: process.env.REACT_APP_ACCESS_KEY,
+  secretAccessKey: process.env.REACT_APP_SECRET_KEY,
 });
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = "dechat.eth";
@@ -85,8 +85,8 @@ export default class Chat extends Component {
   }
 
   async get_messages() {
-    console.log(process.env.ACCESS_KEY);
-    console.log(process.env.SECRET_KEY);
+    console.log(process.env.REACT_APP_ACCESS_KEY);
+    console.log(process.env.REACT_APP_SECRET_KEY);
     try {
       const params = {
         TableName: message_table,
