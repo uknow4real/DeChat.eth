@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { sha512 } from "crypto-hash";
 import ChatMessage from "./ChatMessage";
 
-const aws_access = require("../secrets.json");
+//const aws_access = require("../secrets.json");
 const aws = require("aws-sdk");
 aws.config.update({
   region: "us-east-2",
   endpoint: "https://dynamodb.us-east-2.amazonaws.com",
-  accessKeyId: aws_access.access_key,
-  secretAccessKey: aws_access.secret_key,
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_KEY
 });
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = "dechat.eth";
