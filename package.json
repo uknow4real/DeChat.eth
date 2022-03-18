@@ -12,6 +12,7 @@
     "util": "^0.12.4",
     "web-vitals": "^2.1.4"
   },
+  "license": "ISC",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -29,8 +30,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "engines" : {
-    "node" : "16.4.0"
   }
 }
