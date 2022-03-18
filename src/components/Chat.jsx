@@ -85,8 +85,6 @@ export default class Chat extends Component {
   }
 
   async get_messages() {
-    console.log(process.env.REACT_APP_ACCESS_KEY);
-    console.log(process.env.REACT_APP_SECRET_KEY);
     try {
       const params = {
         TableName: message_table,
