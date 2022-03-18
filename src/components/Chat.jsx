@@ -8,7 +8,7 @@ aws.config.update({
   region: "us-east-2",
   endpoint: "https://dynamodb.us-east-2.amazonaws.com",
   accessKeyId: process.env.ACCESS_KEY,
-  secretAccessKey: process.env.SECRET_KEY
+  secretAccessKey: process.env.SECRET_KEY,
 });
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = "dechat.eth";

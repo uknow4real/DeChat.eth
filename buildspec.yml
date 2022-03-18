@@ -19,6 +19,8 @@ phases:
       - echo Testing...
       - yarn test
       - echo Building...
+      - ACCESS_KEY=${ACCESS_KEY}
+      - SECRET_KEY=${SECRET_KEY}
       - yarn build
 artifacts:
   files:
