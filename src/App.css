@@ -112,3 +112,7 @@ body {
 .time-sent {
   float: left;
 }
+
+#logoutbtn {
+  margin-right: 3rem;
+}

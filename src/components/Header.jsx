@@ -52,32 +52,11 @@ function Header(props) {
             alt="avatar"
           />
         </div> : null}
-        <div className="form-inline">
+        <div className="form-inline" id="logoutbtn">
           <button className="btn btn-warning" onClick={logout}>
             Logout
           </button>
         </div>
-        <ul className="navbar-nav ms-auto">
-          <span className="text-muted">
-            by&nbsp;
-            <a
-              href="https://github.com/uknow4real"
-              target="_blank"
-              className="link-secondary"
-            >
-              Sebastian Chmel
-            </a>
-            &nbsp;&nbsp;
-            <a
-              href="https://github.com/leobowenwang"
-              target="_blank"
-              className="link-secondary"
-            >
-              Leo Wang
-            </a>
-            &nbsp;
-          </span>
-        </ul>
       </div>
     );
   }
