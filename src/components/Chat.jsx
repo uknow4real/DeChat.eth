@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { sha512 } from "crypto-hash";
 import ChatMessage from "./ChatMessage";
-
-//const aws_access = require("../secrets.json");
 const aws = require("aws-sdk");
 aws.config.update({
   region: "us-east-2",
@@ -12,7 +10,6 @@ aws.config.update({
 });
 const db = new aws.DynamoDB.DocumentClient();
 const message_table = "dechat.eth";
-// 0x4a9cD320e8a1EEa8fD39748a10833555CB9bafD9
 
 export default class Chat extends Component {
   componentDidMount() {
@@ -57,6 +54,9 @@ export default class Chat extends Component {
         this.state.room = room;
         return roomID;
       }
+    } else {
+      window.location.replace('/');
+      localStorage.clear();
     }
   }
 
@@ -103,13 +103,7 @@ export default class Chat extends Component {
   }
 
   render() {
-    const { formState, messages, accounts, connected, username } = this.state;
-    const { contract } = this.props;
-    async function set_username() {
-      await contract.methods
-        .createUser(formState.name)
-        .send({ from: accounts[0] });
-    }
+    const { formState, messages, accounts, username } = this.state;
     async function send_message() {
       let message = formState.message;
       let sender = accounts[0];
@@ -142,31 +136,6 @@ export default class Chat extends Component {
     }
     return (
       <div style={{ padding: 30, textAlign: "center" }}>
-        <h2>User Settings</h2>
-        <img
-          src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
-          className="avatar"
-          alt="avatar"
-        />
-        <h4>User Address: {accounts}</h4>
-        {username != null ? <h4>Username: {username}</h4> : ""}
-        <div className="input-group">
-          <input
-            onChange={(e) =>
-              this.setState({
-                formState: { ...formState, name: e.target.value },
-              })
-            }
-            placeholder="Username"
-            className="form-control"
-            name="name"
-            value={formState.name}
-          />
-          <button className="btn btn-primary" onClick={set_username}>
-            Set Username
-          </button>
-        </div>
-        <hr />
         <div className="container card">
           <h2>Room</h2>
           <h4>{localStorage.getItem("room")}</h4>

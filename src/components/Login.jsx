@@ -4,6 +4,12 @@ export default class Login extends Component {
     this.getAccounts();
   }
 
+  componentWillUnmount() {
+    this.state.formState = null;
+    this.state.messages = null;
+    ethereum.disconnect;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -11,6 +17,7 @@ export default class Login extends Component {
         room: "",
       },
       accounts: null,
+      username: null,
       connected: false,
     };
   }
@@ -38,12 +45,29 @@ export default class Login extends Component {
         connected: true,
       });
       console.log("connected...");
+      this.get_username(accounts[0]);
+    }
+  }
+
+  async get_username(account) {
+    const username = await this.props.contract.methods
+      .getUsername(account)
+      .call({ from: account });
+    if (username != "") {
+      this.setState({
+        username: username,
+      });
     }
   }
 
   render() {
-    const { formState, accounts, connected } = this.state;
+    const { formState, accounts, connected, username } = this.state;
     const { contract } = this.props;
+    async function set_username() {
+      await contract.methods
+        .createUser(formState.name)
+        .send({ from: accounts[0] });
+    }
     async function joinRoom() {
       if (web3.utils.isAddress(formState.room)) {
         let roomID = await contract.methods
@@ -98,12 +122,32 @@ export default class Login extends Component {
       if (connected == true) {
         return (
           <div style={{ padding: 30, textAlign: "center" }}>
+            <h2>User Settings</h2>
             <h4>User Address: {accounts[0]}</h4>
+            {username != null ? <h4>Username: {username}</h4> : ""}
+            <div className="input-group">
+              <input
+                onChange={(e) =>
+                  this.setState({
+                    formState: { ...formState, name: e.target.value },
+                  })
+                }
+                placeholder="Username"
+                className="form-control"
+                name="name"
+                value={formState.name}
+              />
+              <button className="btn btn-primary" onClick={set_username}>
+                Set Username
+              </button>
+            </div>
+            <div id="rooms"></div>
+            <hr></hr>
             <button className="btn btn-primary" onClick={createRoom}>
               Create Room
             </button>
-            <div id="rooms"></div>
-            <hr></hr>
+            <br></br>
+            <br></br>
             <div className="input-group">
               <input
                 onChange={(e) =>
