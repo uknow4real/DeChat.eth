@@ -32,7 +32,7 @@ function Header(props) {
   }, []);
   if (localStorage.getItem('room') !== null && window.location.pathname === '/chat') {
     return (
-      <div className="navbar navbar-expand-lg navbar-light bg-light">
+      <div className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a href="/">
           <img
             src={`logo.png`}

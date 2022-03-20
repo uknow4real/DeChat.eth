@@ -55,7 +55,7 @@ export default class Chat extends Component {
         return roomID;
       }
     } else {
-      window.location.replace('/');
+      window.location.replace("/");
       localStorage.clear();
     }
   }
@@ -136,17 +136,19 @@ export default class Chat extends Component {
     }
     return (
       <div style={{ padding: 30, textAlign: "center" }}>
-        <div className="container card">
+        <main>
           <h2>Room</h2>
           <h4>{localStorage.getItem("room")}</h4>
-          {messages.map((message) => (
-            <ChatMessage
-              key={message.id}
-              message={message}
-              username={username}
-            />
-          ))}
-        </div>
+          <div className="container card">
+            {messages.map((message) => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                username={username}
+              />
+            ))}
+          </div>
+        </main>
         <div className="input-group fixed-bottom w-auto m-lg-3">
           <input
             onChange={(e) =>
@@ -158,8 +160,18 @@ export default class Chat extends Component {
             className="form-control"
             name="message"
             value={formState.message}
+            maxLength="100"
+            onKeyPress={(event) => {
+              if (event.key === "Enter") {
+                send_message();
+              }
+            }}
           />
-          <button className="btn btn-primary" onClick={send_message}>
+          <button
+            className="btn btn-primary"
+            disabled={formState.message === ""}
+            onClick={send_message}
+          >
             Send
           </button>{" "}
         </div>
