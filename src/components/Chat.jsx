@@ -39,7 +39,7 @@ export default class Chat extends Component {
       room: null,
       accounts: null,
       connected: null,
-      bottom: React.createRef()
+      bottom: React.createRef(),
     };
   }
 

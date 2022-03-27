@@ -23,14 +23,19 @@ function Header(props) {
       .call({ from: acc });
     if (user_name != "") {
       setAccount(acc);
-      return user_name
+      return user_name;
     }
   }
 
   useEffect(() => {
-    getAccounts().then((acc) => {getUsername(acc).then((user) => setUsername(user))});
+    getAccounts().then((acc) => {
+      getUsername(acc).then((user) => setUsername(user));
+    });
   }, []);
-  if (localStorage.getItem('room') !== null && window.location.pathname === '/chat') {
+  if (
+    localStorage.getItem("room") !== null &&
+    window.location.pathname === "/chat"
+  ) {
     return (
       <div className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a href="/">
@@ -41,18 +46,21 @@ function Header(props) {
             alt="DeChat.eth"
           />
         </a>
-        {username !== undefined ?
-        <div className="mx-auto order-0">
-          <span>
-            Welcome <strong>{username}</strong> &nbsp;
-          </span>
-          <img
-            src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
-            className="avatar"
-            alt="avatar"
-          />
-        </div> : null}
-        <button type="button" class="btn btn-secondary " disabled>Room: {localStorage.getItem("room")}</button>
+        {username !== undefined ? (
+          <div className="mx-auto order-0">
+            <span>
+              Welcome <strong>{username}</strong> &nbsp;
+            </span>
+            <img
+              src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
+              className="avatar"
+              alt="avatar"
+            />
+          </div>
+        ) : null}
+        <button type="button" class="btn btn-secondary " disabled>
+          Room: {localStorage.getItem("room")}
+        </button>
         <div className="form-inline" id="logoutbtn">
           <button className="btn btn-warning" onClick={logout}>
             Logout

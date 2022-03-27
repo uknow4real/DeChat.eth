@@ -17,7 +17,7 @@ let dechat = new web3.eth.Contract(
 export default () => {
   return (
     <Router>
-      <Header contract={dechat}/>
+      <Header contract={dechat} />
       <Routes>
         <Route path="/" element={<Login contract={dechat} />} />
         <Route path="/chat" element={<Chat contract={dechat} />} />
