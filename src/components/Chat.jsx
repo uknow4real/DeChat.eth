@@ -137,8 +137,6 @@ export default class Chat extends Component {
     return (
       <div style={{ padding: 30, textAlign: "center" }}>
         <main>
-          <h2>Room</h2>
-          <h4>{localStorage.getItem("room")}</h4>
           <div className="container card">
             {messages.map((message) => (
               <ChatMessage

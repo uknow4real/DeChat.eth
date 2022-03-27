@@ -52,6 +52,7 @@ function Header(props) {
             alt="avatar"
           />
         </div> : null}
+        <button type="button" class="btn btn-secondary " disabled>Room: {localStorage.getItem("room")}</button>
         <div className="form-inline" id="logoutbtn">
           <button className="btn btn-warning" onClick={logout}>
             Logout
