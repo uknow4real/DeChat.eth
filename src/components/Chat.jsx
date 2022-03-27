@@ -39,6 +39,7 @@ export default class Chat extends Component {
       room: null,
       accounts: null,
       connected: null,
+      bottom: React.createRef()
     };
   }
 
@@ -103,7 +104,7 @@ export default class Chat extends Component {
   }
 
   render() {
-    const { formState, messages, accounts, username } = this.state;
+    const { formState, messages, accounts, username, bottom } = this.state;
     async function send_message() {
       let message = formState.message;
       let sender = accounts[0];
@@ -134,6 +135,7 @@ export default class Chat extends Component {
           }
         );
     }
+    bottom.current?.scrollIntoView({ behavior: "smooth" });
     return (
       <div style={{ padding: 30, textAlign: "center" }}>
         <main>
@@ -146,6 +148,7 @@ export default class Chat extends Component {
               />
             ))}
           </div>
+          <span ref={bottom} />
         </main>
         <div className="input-group fixed-bottom w-auto m-lg-3">
           <input
