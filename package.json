@@ -1,6 +1,7 @@
 {
   "name": "dechat.eth",
   "version": "0.1.0",
+  "author": "Sebastian Chmel & Leo Bowen Wang",
   "dependencies": {
     "aws-sdk": "^2.1102.0",
     "bootstrap": "^5.1.3",
