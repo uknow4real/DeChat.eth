@@ -33,5 +33,5 @@ yarn start
 ```
 
 ### Deployment
-To deploy your own smart contract, use the [Remix IDE] (https://remix.ethereum.org/). You can simply copy the .sol contract from the contracts folder into the IDE and compile it / use your Metamask Wallet to deploy it.
+To deploy your own smart contract, use the [Remix IDE](https://remix.ethereum.org/). You can simply copy the .sol contract from the contracts folder into the IDE and compile it / use your Metamask Wallet to deploy it.
 
