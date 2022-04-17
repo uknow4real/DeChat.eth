@@ -137,7 +137,7 @@ export default class Chat extends Component {
     }
     bottom.current?.scrollIntoView({ behavior: "smooth" });
     return (
-      <div style={{ padding: 30, textAlign: "center" }}>
+      <div className="App">
         <main>
           <div className="container card">
             {messages.map((message) => (

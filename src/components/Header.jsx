@@ -46,25 +46,38 @@ function Header(props) {
             alt="DeChat.eth"
           />
         </a>
-        {username !== undefined ? (
-          <div className="mx-auto order-0">
-            <span>
-              Welcome <strong>{username}</strong> &nbsp;
-            </span>
-            <img
-              src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
-              className="avatar"
-              alt="avatar"
-            />
-          </div>
-        ) : null}
-        <button type="button" class="btn btn-secondary " disabled>
-          Room: {localStorage.getItem("room")}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="form-inline" id="logoutbtn">
-          <button className="btn btn-warning" onClick={logout}>
-            Logout
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          {username !== undefined ? (
+            <div className="mx-auto order-0">
+              <span>
+                Welcome <strong>{username}</strong> &nbsp;
+              </span>
+              <img
+                src={`https://avatars.dicebear.com/api/initials/${username}.svg`}
+                className="avatar"
+                alt="avatar"
+              />
+            </div>
+          ) : null}
+          <button type="button" className="btn btn-secondary " disabled>
+            Room: {localStorage.getItem("room")}
           </button>
+          <div className="form-inline" id="logoutbtn">
+            <button className="btn btn-warning" onClick={logout}>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -89,7 +102,7 @@ function Header(props) {
           >
             Sebastian Chmel
           </a>
-          &nbsp;&nbsp;
+          &nbsp;&&nbsp;
           <a
             href="https://github.com/leobowenwang"
             target="_blank"
