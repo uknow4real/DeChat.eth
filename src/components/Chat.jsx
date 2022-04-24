@@ -14,7 +14,7 @@ const message_table = "dechat.eth";
 export default class Chat extends Component {
   componentDidMount() {
     if (this.initRoom()) {
-      this.get_messages();
+      this.loadMessage();
       ethereum.on("accountsChanged", () => {
         window.location.reload();
       });
@@ -69,12 +69,12 @@ export default class Chat extends Component {
         connected: true,
       });
       console.log("connected!");
-      this.get_username(accounts[0]);
+      this.getUsername(accounts[0]);
     }
     return accounts;
   }
 
-  async get_username(account) {
+  async getUsername(account) {
     const username = await this.props.contract.methods
       .getUsername(account)
       .call({ from: account });
@@ -85,7 +85,7 @@ export default class Chat extends Component {
     }
   }
 
-  async get_messages() {
+  async loadMessage() {
     try {
       const params = {
         TableName: message_table,
@@ -105,7 +105,7 @@ export default class Chat extends Component {
 
   render() {
     const { formState, messages, accounts, username, bottom } = this.state;
-    async function send_message() {
+    async function sendMessage() {
       let message = formState.message;
       let sender = accounts[0];
       let room = localStorage.getItem("room");
@@ -164,14 +164,14 @@ export default class Chat extends Component {
             maxLength="100"
             onKeyPress={(event) => {
               if (event.key === "Enter") {
-                send_message();
+                sendMessage();
               }
             }}
           />
           <button
             className="btn btn-primary"
             disabled={formState.message === ""}
-            onClick={send_message}
+            onClick={sendMessage}
           >
             Send
           </button>{" "}

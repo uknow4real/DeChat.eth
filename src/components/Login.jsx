@@ -45,11 +45,12 @@ export default class Login extends Component {
         connected: true,
       });
       console.log("connected...");
-      this.get_username(accounts[0]);
+      this.getUsername(accounts[0]);
     }
   }
 
-  async get_username(account) {
+  // TODO: duplicate method?
+  async getUsername(account) {
     const username = await this.props.contract.methods
       .getUsername(account)
       .call({ from: account });
@@ -63,7 +64,7 @@ export default class Login extends Component {
   render() {
     const { formState, accounts, connected, username } = this.state;
     const { contract } = this.props;
-    async function set_username() {
+    async function setUsername() {
       await contract.methods
         .createUser(formState.name)
         .send({ from: accounts[0] });
@@ -137,7 +138,7 @@ export default class Login extends Component {
                 name="name"
                 value={formState.name}
               />
-              <button className="btn btn-primary" onClick={set_username}>
+              <button className="btn btn-primary" onClick={setUsername}>
                 Set Username
               </button>
             </div>
