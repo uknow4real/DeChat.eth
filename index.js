@@ -31,7 +31,7 @@ async function send_message(message, sender, recipient, timestamp) {
         console.log("message sent");
       },
       (error) => {
-        console.error("Oh no.", error);
+        console.error("send message failed", error);
       }
     );
 }

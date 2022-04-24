@@ -131,7 +131,7 @@ export default class Chat extends Component {
             window.location.reload();
           },
           (error) => {
-            console.error("Oh no.", error);
+            console.error("send message failed", error);
           }
         );
     }
