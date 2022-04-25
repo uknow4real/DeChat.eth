@@ -82,6 +82,7 @@ function Header(props) {
       </div>
     );
   }
+
   return (
     <div className="navbar navbar-expand-lg navbar-light bg-light">
       <a href="/">

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.12;
 
 contract DeChat {
-
     address owner;
 
     mapping(address => string) addressToUsername;
@@ -14,12 +13,18 @@ contract DeChat {
     }
 
     function createRoom() external {
-        address room_id = address(bytes20(sha256(abi.encodePacked(msg.sender,block.timestamp))));
+        address room_id = address(
+            bytes20(sha256(abi.encodePacked(msg.sender, block.timestamp)))
+        );
         addressToRoom[msg.sender].push(room_id);
         allRooms[room_id] = room_id;
     }
 
-    function getOwnRooms(address _address) external view returns (address[] memory) {
+    function getOwnRooms(address _address)
+        external
+        view
+        returns (address[] memory)
+    {
         return addressToRoom[_address];
     }
 

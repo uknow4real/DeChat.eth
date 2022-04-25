@@ -64,11 +64,13 @@ export default class Login extends Component {
   render() {
     const { formState, accounts, connected, username } = this.state;
     const { contract } = this.props;
+
     async function setUsername() {
       await contract.methods
         .createUser(formState.name)
         .send({ from: accounts[0] });
     }
+
     async function joinRoom() {
       if (web3.utils.isAddress(formState.room)) {
         let roomID = await contract.methods
@@ -82,6 +84,7 @@ export default class Login extends Component {
       }
       alert("Room does not exist");
     }
+
     async function createRoom() {
       await contract.methods.createRoom().send({ from: accounts[0] });
       let roomID = await contract.methods
@@ -95,6 +98,7 @@ export default class Login extends Component {
           "\n\nPlease keep it safe and share this ID with your friends to join the room!"
       );
     }
+
     if (!ethereum._state.isUnlocked) {
       return (
         <div>
