@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { sha512 } from "crypto-hash";
 import ChatMessage from "./ChatMessage";
+
 const aws = require("aws-sdk");
 aws.config.update({
   region: "us-east-2",

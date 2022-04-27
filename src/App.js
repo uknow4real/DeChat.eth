@@ -12,7 +12,6 @@ let dechat = new web3.eth.Contract(
   contract,
   "0x651383Ef6c43745a0f06F80A8Ac5bc104eD63a1e"
 );
-// 0x651383Ef6c43745a0f06F80A8Ac5bc104eD63a1e
 
 export default () => {
   return (
